@@ -15,8 +15,8 @@ app.get('/health', (req, res)=>{
     })
 })
 
-app.get('/get-jobs', (req, res)=>{
-    const {limit, text, offset, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
+app.get('/jobs', (req, res)=>{
+    const {limit = 10, offset = 0, text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
     let filteredJobs = jobs
     
 
@@ -33,7 +33,43 @@ app.get('/get-jobs', (req, res)=>{
             job.technology.toLocaleLowerCase().includes(searchTerm)
         )
     }
-    return res.json(filteredJobs)
+
+    const limitNumber = Number(limit)
+    const limitOffset = Number(offset)
+
+    const paginatedJobs = (limitOffset, limitOffset + limitNumber)
+
+    return res.json(paginatedJobs)
+})
+
+app.get('/jobs/:id', (req, res)=>{
+    const {id} = req.params
+
+    const idNumber = Number(id)
+
+    return res.json({
+        job: {id: idNumber, title: `Job with id ${id}`}
+    })
+})
+
+// Crear un nuevo recurso
+app.post('/jobs', (req, res)=>{
+
+})
+
+// Eliminar un recurso
+app.delete('/jobs/:id', (req, res)=>{
+
+})
+
+// Reemplazar un recurso completo
+app.put('/jobs/:id', (req, res)=>{
+    
+})
+
+// Actualizar parcialmente un recurso
+app.patch('/jobs/:id', (req, res)=>{
+    
 })
 
 app.listen(PORT, ()=>{
