@@ -16,7 +16,24 @@ app.get('/health', (req, res)=>{
 })
 
 app.get('/get-jobs', (req, res)=>{
-    return res.json(jobs)
+    const {limit, text, offset, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
+    let filteredJobs = jobs
+    
+
+    if (text) {
+        const searchTerm = text.toLowerCase()
+        filteredJobs = filteredJobs.filter(job=>
+            job.titulo.toLocaleLowerCase().includes(searchTerm) || job.descripcion.toLocaleLowerCase().includes(searchTerm)
+        )
+    }
+
+    if (technology) {
+        const searchTerm = technology.toLocaleLowerCase()
+        filteredJobs = filteredJobs.filter(job=>
+            job.technology.toLocaleLowerCase().includes(searchTerm)
+        )
+    }
+    return res.json(filteredJobs)
 })
 
 app.listen(PORT, ()=>{
