@@ -15,6 +15,8 @@ app.get('/health', (req, res)=>{
     })
 })
 
+// CRUD: Create, Read, Update, Delete
+
 app.get('/jobs', (req, res)=>{
     const {limit = 10, offset = 0, text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
     let filteredJobs = jobs
@@ -45,16 +47,30 @@ app.get('/jobs', (req, res)=>{
 app.get('/jobs/:id', (req, res)=>{
     const {id} = req.params
 
-    const idNumber = Number(id)
+    const job = jobs.find(job => job.id === id)
 
-    return res.json({
-        job: {id: idNumber, title: `Job with id ${id}`}
-    })
+    if (!job) {
+        return res.status(404).json({error: 'Job not found'})
+    }
+
+    return res.json(job)
 })
 
 // Crear un nuevo recurso
 app.post('/jobs', (req, res)=>{
+    const {titulo, empresa, ubicacion, data} = req.body
 
+    const newJob = {
+        id: crypto.randomUUID(),
+        titulo,
+        empresa, 
+        ubicacion, 
+        data
+    }
+
+    jobs.push(newJob) // Despues lo hacemos con un insert en una BD
+
+    return res.status(201).json(newJob)
 })
 
 // Eliminar un recurso
