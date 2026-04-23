@@ -1,8 +1,25 @@
 import express from 'express'
+import cors from 'cors'
 import jobs from './jobs.json' with {type: 'json'} // with type requerido pq por default no puede importar archivos y leerlos como json por seguridad
 
 const PORT = process.env.PORT ?? 1234
 const app = express()
+
+const ACCEPTED_ORIGINS = [
+    'http://localhost:5173/'
+]
+
+app.use(
+    cors({origin: '*'})
+    /* cors({
+        origin: (origin, callback) => {
+            if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
+                return callback(null, true)
+            }
+            return callback(new Error('El callback no esta permitido'))
+        }
+    }) */
+)
 
 app.use(express.json()) // Midelware que parsea peticiones POST, detecta si tiene la cabecera del json
 
@@ -47,9 +64,9 @@ app.get('/jobs', (req, res)=>{
     const limitNumber = Number(limit)
     const limitOffset = Number(offset)
 
-    const paginatedJobs = (limitOffset, limitOffset + limitNumber)
+    const paginatedJobs = filteredJobs.slice((limitOffset, limitOffset + limitNumber))
 
-    return res.json(paginatedJobs)
+    return res.json({data: paginatedJobs, total: filteredJobs.length, limit: limitNumber, offset: limitOffset})
 })
 
 app.get('/jobs/:id', (req, res)=>{
