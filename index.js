@@ -6,6 +6,12 @@ const app = express()
 
 app.use(express.json()) // Midelware que parsea peticiones POST, detecta si tiene la cabecera del json
 
+app.use((req, res, next)=>{
+    const timeString = new Date().toLocaleDateString()
+    console.log(`[${timeString}] ${req.method} ${req.url}`)
+    next()
+})
+
 app.get('/', (req, res) => {
     return res.send('Hola, primer archivo de back')
 })
