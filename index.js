@@ -4,6 +4,8 @@ import jobs from './jobs.json' with {type: 'json'} // with type requerido pq por
 const PORT = process.env.PORT ?? 1234
 const app = express()
 
+app.use(express.json()) // Midelware que parsea peticiones POST, detecta si tiene la cabecera del json
+
 app.get('/', (req, res) => {
     return res.send('Hola, primer archivo de back')
 })
