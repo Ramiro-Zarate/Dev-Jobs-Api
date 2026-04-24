@@ -43,7 +43,12 @@ app.get('/health', (req, res)=>{
 // CRUD: Create, Read, Update, Delete
 
 app.get('/jobs', (req, res)=>{
-    const {limit = DEFAULTS.LIMIT_PAGINATION, offset = DEFAULTS.LIMIT_PAGINATION, text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
+    const {
+        limit = DEFAULTS.LIMIT_PAGINATION,
+        offset = DEFAULTS.LIMIT_OFFSET,
+        text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements,
+        about} = req.query
+
     let filteredJobs = jobs
     
 
@@ -61,12 +66,17 @@ app.get('/jobs', (req, res)=>{
         )
     }
 
+    const totalJobs = filteredJobs.length
+
     const limitNumber = Number(limit)
     const offsetNumber = Number(offset)
 
     const paginatedJobs = filteredJobs.slice(offsetNumber, offsetNumber + limitNumber)
 
-    return res.json(paginatedJobs)
+    return res.json({
+        data: paginatedJobs,
+        total: totalJobs
+        })
 })
 
 app.get('/jobs/:id', (req, res)=>{
