@@ -1,24 +1,24 @@
 import express from 'express'
 import cors from 'cors'
 import jobs from './jobs.json' with {type: 'json'} // with type requerido pq por default no puede importar archivos y leerlos como json por seguridad
+import { DEFAULTS } from './config.js'
 
-const PORT = process.env.PORT ?? 1234
+const PORT = process.env.PORT ?? DEFAULTS.PORT
 const app = express()
 
 const ACCEPTED_ORIGINS = [
-    'http://localhost:5173/'
+    'http://localhost:5173'
 ]
 
 app.use(
-    cors({origin: '*'})
-    /* cors({
+    cors({
         origin: (origin, callback) => {
             if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
                 return callback(null, true)
             }
             return callback(new Error('El callback no esta permitido'))
         }
-    }) */
+    })
 )
 
 app.use(express.json()) // Midelware que parsea peticiones POST, detecta si tiene la cabecera del json
@@ -43,7 +43,7 @@ app.get('/health', (req, res)=>{
 // CRUD: Create, Read, Update, Delete
 
 app.get('/jobs', (req, res)=>{
-    const {limit = 10, offset = 0, text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
+    const {limit = DEFAULTS.LIMIT_PAGINATION, offset = DEFAULTS.LIMIT_PAGINATION, text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements, about} = req.query
     let filteredJobs = jobs
     
 
@@ -62,11 +62,11 @@ app.get('/jobs', (req, res)=>{
     }
 
     const limitNumber = Number(limit)
-    const limitOffset = Number(offset)
+    const offsetNumber = Number(offset)
 
-    const paginatedJobs = filteredJobs.slice((limitOffset, limitOffset + limitNumber))
+    const paginatedJobs = filteredJobs.slice(offsetNumber, offsetNumber + limitNumber)
 
-    return res.json({data: paginatedJobs, total: filteredJobs.length, limit: limitNumber, offset: limitOffset})
+    return res.json(paginatedJobs)
 })
 
 app.get('/jobs/:id', (req, res)=>{
