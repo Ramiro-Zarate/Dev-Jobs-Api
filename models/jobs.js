@@ -4,7 +4,7 @@ import { DEFAULTS } from '../config.js'
 export class JobModel {
     static async getAll ({limit = DEFAULTS.LIMIT_PAGINATION,
         offset = DEFAULTS.LIMIT_OFFSET,
-        text, id, titulo, empresa, ubicacion, descripcion, technology, modalidad, nivel, content, responsabilities, rquierements,
+        text, id, titulo, empresa, location, descripcion, technology, modalidad, level, content, responsabilities, rquierements,
         about}){
         let filteredJobs = jobs
     
@@ -18,7 +18,23 @@ export class JobModel {
         if (technology) {
             const searchTerm = technology.toLocaleLowerCase()
             filteredJobs = filteredJobs.filter(job=>
-                job.technology.toLocaleLowerCase().includes(searchTerm)
+                job.data.technology.includes(searchTerm)
+            )
+        }
+
+        if (location) {
+            const searchTerm = location.toLocaleLowerCase()
+            filteredJobs = filteredJobs.filter(job=>{
+                const matchUbicacion = job.ubicacion?.toLowerCase().includes(searchTerm)
+                const matchModalidad = job.data?.modalidad?.toLowerCase().includes(searchTerm)
+                return matchUbicacion || matchModalidad}
+            )
+        }
+
+        if (level) {
+            const searchTerm = level.toLocaleLowerCase()
+            filteredJobs = filteredJobs.filter(job=>
+                job.data.nivel.includes(searchTerm)
             )
         }
 

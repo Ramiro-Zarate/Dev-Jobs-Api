@@ -6,9 +6,9 @@ export class JobController{
         const {
         limit = DEFAULTS.LIMIT_PAGINATION,
         offset = DEFAULTS.LIMIT_OFFSET,
-        text, title, level, technology} = req.query
+        text, title, level, technology, location} = req.query
 
-        const {jobs, total} = await JobModel.getAll({text, title, level, limit, technology, offset})
+        const {jobs, total} = await JobModel.getAll({text, title, level, limit, technology, offset, location})
             
         return res.json({
             data: jobs,
