@@ -11,6 +11,12 @@ app.use(express.json()) // Midelware que parsea peticiones POST, detecta si tien
 
 app.use('/jobs', jobsRouter)
 
-app.listen(PORT, ()=>{
+if (procces.env.NODE_ENV !== 'production'){
+    app.listen(PORT, ()=>{
     console.log(`Servidor inicalizado en el puerto http://localhost:${PORT}`)
 })
+}
+
+
+
+export default app 
