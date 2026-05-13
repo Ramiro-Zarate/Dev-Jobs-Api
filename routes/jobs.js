@@ -7,7 +7,7 @@ export const jobsRouter = Router()
 function valdiateCreate (req, res, next) {
     const result = validateJob(req.body)
     if (!result.success){
-        return res.status(400).json({ error: 'Req invalido', details: result.error.errors})
+        return res.status(400).json({ message: 'Req invalido', errors: result.error.errors})
     }
     req.body = result.data
     return next()
@@ -22,13 +22,18 @@ function validateUpdate (req, res, next) {
     return next()
 }
 
+function validatePartial (req, res, next) {
+    const result = validatePartialJob(req.body)
+    if (!result.success){
+        return res.status(400).json({ message: 'Req invalido', errors: result.error.errors})
+    }
+    req.body = result.data
+    return next()
+}
+
 jobsRouter.get('/', JobController.getAll)
 jobsRouter.get('/:id', JobController.getId)
-// Crear un nuevo recurso
-jobsRouter.post('/', JobController.create)
-// Eliminar un recurso
+jobsRouter.post('/', valdiateCreate, JobController.create)
 jobsRouter.delete('/:id', JobController.delete)
-// Reemplazar un recurso completo
-jobsRouter.put('/:id', JobController.update)
-// Actualizar parcialmente un recurso
-jobsRouter.patch('/:id', JobController.partialUpdate)
+jobsRouter.put('/:id', validateUpdate, JobController.update)
+jobsRouter.patch('/:id', validatePartial, JobController.partialUpdate)

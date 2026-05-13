@@ -69,4 +69,37 @@ export class JobModel {
 
         return newJob
     }
+
+    static async update(id, data){
+        const index = jobs.findIndex(job => job.id === id)
+        if (index === -1) return null
+
+        const updatedJob = {
+            ...jobs[index],
+            ...data,
+            id
+        }
+        jobs[index] = updatedJob
+        return updatedJob
+    }
+
+    static async partialUpdate(id, data){
+        const index = jobs.findIndex(job => job.id === id)
+        if (index === -1) return null
+
+        const updatedJob = {
+            ...jobs[index],
+            ...data
+        }
+        jobs[index] = updatedJob
+        return updatedJob
+    }
+
+    static async delete(id){
+        const index = jobs.findIndex(job => job.id === id)
+        if (index === -1) return false
+
+        jobs.splice(index, 1)
+        return true
+    }
 }

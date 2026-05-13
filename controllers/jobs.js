@@ -37,13 +37,40 @@ export class JobController{
     }
 
     static async update(req, res){
+        const {id} = req.params
+        const data = req.body
+
+        const updatedJob = await JobModel.update(id, data)
+
+        if (!updatedJob) {
+            return res.status(404).json({error: 'Job not found'})
+        }
+
+        return res.json(updatedJob)
     }
 
     static async partialUpdate(req, res){
+        const {id} = req.params
+        const data = req.body
 
+        const updatedJob = await JobModel.partialUpdate(id, data)
+
+        if (!updatedJob) {
+            return res.status(404).json({error: 'Job not found'})
+        }
+
+        return res.json(updatedJob)
     }
 
     static async delete(req, res){
+        const {id} = req.params
 
+        const deleted = await JobModel.delete(id)
+
+        if (!deleted) {
+            return res.status(404).json({error: 'Job not found'})
+        }
+
+        return res.status(204).send()
     }
 }

@@ -1,3 +1,5 @@
+import app from './app.js'
+
 app.use((req, res, next)=>{
     const timeString = new Date().toLocaleDateString()
     console.log(`[${timeString}] ${req.method} ${req.url}`)
