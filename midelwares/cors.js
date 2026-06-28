@@ -1,7 +1,8 @@
 import cors from 'cors'
 
 const ACCEPTED_ORIGINS = [
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://dev-jobs-react-ten.vercel.app'
 ]
 
 export const corsMidelware = ({acceptedOrigins = ACCEPTED_ORIGINS} = {}) =>{
